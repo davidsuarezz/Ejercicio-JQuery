@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ejercicio jQuery</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 500px; margin: 30px auto; }
+    label { display: block; margin-top: 10px; }
+    input { width: 100%; padding: 6px; box-sizing: border-box; }
+    .error { color: red; font-size: 0.85em; }
+    #mensaje { color: green; font-weight: bold; margin-top: 15px; }
+  </style>
+</head>
+<body>
+
+  <!-- Contenido principal -->
+  <div id="principal">
+    <h1>Mi página web</h1>
+    <p>Bienvenido a mi web. Aquí va el contenido principal.</p>
+    <button id="btnRegistro">Registrarse</button>
+  </div>
+
+  <!-- Formulario (oculto al inicio) -->
+  <div id="registro" style="display:none;">
+    <h2>Registro</h2>
+
+    <label>Nombre y apellidos
+      <input type="text" id="nombre">
+    </label>
+    <div class="error" id="errNombre"></div>
+
+    <label>Email
+      <input type="text" id="email">
+    </label>
+    <div class="error" id="errEmail"></div>
+
+    <label>Teléfono
+      <input type="text" id="telefono">
+    </label>
+    <div class="error" id="errTelefono"></div>
+
+    <label>Contraseña
+      <input type="password" id="password">
+    </label>
+    <div class="error" id="errPassword"></div>
+
+    <br>
+    <button id="btnEnviar">Enviar</button>
+    <button id="btnCancelar">Cancelar</button>
+
+    <div id="mensaje"></div>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+
+      // Mostrar formulario y ocultar contenido principal
+      $("#btnRegistro").click(function () {
+        $("#principal").hide();
+        $("#registro").show();
+      });
+
+      // Cancelar: limpiar, ocultar formulario y volver al contenido
+      $("#btnCancelar").click(function () {
+        $("#registro input").val("");
+        $(".error, #mensaje").text("");
+        $("#registro").hide();
+        $("#principal").show();
+      });
+
+      // Validar al pulsar Enviar
+      $("#btnEnviar").click(function () {
+        $(".error, #mensaje").text("");
+        let valido = true;
+
+        // Nombre: al menos dos palabras, solo letras (con acentos y ñ)
+        const nombre = $("#nombre").val().trim();
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñÜü]+(\s+[A-Za-zÁÉÍÓÚáéíóúÑñÜü]+)+$/.test(nombre)) {
+          $("#errNombre").text("Escribe al menos dos palabras, solo letras.");
+          valido = false;
+        }
+
+        // Email
+        const email = $("#email").val().trim();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          $("#errEmail").text("Email no válido.");
+          valido = false;
+        }
+
+        // Teléfono: solo números, sin espacios
+        const telefono = $("#telefono").val();
+        if (!/^[0-9]+$/.test(telefono)) {
+          $("#errTelefono").text("Solo números, sin espacios.");
+          valido = false;
+        }
+
+        // Contraseña: 8+ caracteres, mayúscula, minúscula y número
+        const pass = $("#password").val();
+        if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(pass)) {
+          $("#errPassword").text("Mínimo 8 caracteres con mayúscula, minúscula y número.");
+          valido = false;
+        }
+
+        if (valido) {
+          $("#mensaje").text("¡Registro completado correctamente!");
+        }
+      });
+
+    });
+  </script>
+</body>
+</html>
